@@ -9,10 +9,22 @@ class User(db.Model, UserMixin):
     last_visited = db.Column(db.DateTime)
 
 class Issue(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
     date_issued = db.Column(db.DateTime)
     return_date = db.Column(db.DateTime)
-    book_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, primary_key=True)
+    book_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer)
+
+class IssueRequests(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    book_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer)
+
+class Feedback(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    book_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer)
+    feedback = db.Column(db.String(100))
 
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)

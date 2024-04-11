@@ -31,11 +31,14 @@ def login():
     email = req["email"]
     password = req["password"]
     role = req["role"]
-
+    time = datetime.now()
+    datetime_string =time.strftime("%Y-%m-%d %H:%M:%S")
+    formatted_time = datetime.strptime(datetime_string, "%Y-%m-%d %H:%M:%S")
     user = User.query.filter_by(email=email).first()
     wrong_pass = {"password": "INVALID CREDENTIALS"}
-    user_response = {"email": user.email, "name": user.name, "userid": user.id, "role": user.isAdmin}
-
+    user_response = {"email": user.email, "name": user.name, "userid": user.id, "role": user.isAdmin, "last_visited": user.last_visited}
+    user.last_visited = formatted_time
+    db.session.commit()
     if not user or password != user.password or user.isAdmin != role:
         return make_response(jsonify(wrong_pass), 401)
 
