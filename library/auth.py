@@ -14,7 +14,8 @@ def signup():
     password = req['password']
     role = req['role']
     time = datetime.now()
-    formatted_time = time.strftime("%Y-%m-%d %H:%M:%S")
+    datetime_string =time.strftime("%Y-%m-%d %H:%M:%S")
+    formatted_time = datetime.strptime(datetime_string, "%Y-%m-%d %H:%M:%S")
     user = User.query.filter_by(email=email).first()
     if user:
         return make_response(jsonify({"account":"exists"}), 401)
@@ -33,9 +34,9 @@ def login():
 
     user = User.query.filter_by(email=email).first()
     wrong_pass = {"password": "INVALID CREDENTIALS"}
-    user_response = {"email": user.email, "name": user.name, "userid": user.id, "role": user.role}
+    user_response = {"email": user.email, "name": user.name, "userid": user.id, "role": user.isAdmin}
 
-    if not user or password != user.password or user.role != role:
+    if not user or password != user.password or user.isAdmin != role:
         return make_response(jsonify(wrong_pass), 401)
 
     return make_response(jsonify(user_response), 200)
