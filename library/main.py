@@ -186,7 +186,8 @@ def search():
 #Monthly activity report
 @main.route('/report/<email>', methods=['GET'])
 def report(email):
-    issues = Issue.query.filter_by(email = email)
+    this_user = User.query.filter_by(email=email)
+    issues = Issue.query.filter_by(user_id = this_user.id)
     output = []
     for issue in issues:
         this_book = Book.query.filter_by(id = issue.book_id).first()
