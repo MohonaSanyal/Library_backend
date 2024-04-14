@@ -84,7 +84,7 @@ def delete_book(book_id):
     db.session.commit()
     return make_response(jsonify({"delete": "successful"}))
 
-# #Get book
+#Get book
 @main.route('/books', methods=['GET'])
 def get_section():
     response = {"sections": []}
