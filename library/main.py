@@ -165,7 +165,7 @@ def get_all_books():
         issues = Issue.query.all()
         for issue in issues:
             if issue.book_id == book.id:
-                users_list.append(issue.user_id)
+                users_list.append({"user":issue.user_id, "issue_id":issue.id})
         book_mapping.append({"book_id":book.id, "users_list":users_list})
     return make_response(jsonify({"books":book_mapping}))
 
