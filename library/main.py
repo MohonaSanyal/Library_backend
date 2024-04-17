@@ -2,9 +2,11 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from .models import User, Section, Book, IssueRequests, Issue, Feedback
 from . import db
 from datetime import datetime, timedelta
+from .cache import cache
 main = Blueprint('main', __name__)
 
 @main.route('/')
+@cache.cached(timeout=10)
 def index():
     status = {"Status": "Active"}  
     return make_response(jsonify(status), 200)
