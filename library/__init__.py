@@ -2,7 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_cors import CORS
-from .cache import cache
+#from .cache import cache
 
 
 db = SQLAlchemy()
@@ -11,13 +11,13 @@ def create_app():
     app = Flask(__name__)
 
     #app.config.from_object(LocalDevelopmentConfig)
-    app.config['CACHE_TYPE']='redis'
-    app.config['CACHE_REDIS_HOST']='redis'
-    app.config['CACHE_REDIS_PORT']='6379'
-    app.config['CACHE_REDIS_DB']='0'
-    app.config['CACHE_REDIS_URL']='rediss://red-cofver779t8c73ccbr8g:OT31I1Etg06kxn0DY55ufL3eOmUr5Og9@singapore-redis.render.com:6379'
-    app.config['CACHE_DEFAULT_TIMEOUT']='500'
-    cache.init_app(app)
+    # app.config['CACHE_TYPE']='redis'
+    # app.config['CACHE_REDIS_HOST']='redis'
+    # app.config['CACHE_REDIS_PORT']='6379'
+    # app.config['CACHE_REDIS_DB']='0'
+    # app.config['CACHE_REDIS_URL']='rediss://red-cofver779t8c73ccbr8g:OT31I1Etg06kxn0DY55ufL3eOmUr5Og9@singapore-redis.render.com:6379'
+    # app.config['CACHE_DEFAULT_TIMEOUT']='500'
+    # cache.init_app(app)
 
     app.config['SECRET_KEY'] = 'secret-key'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
