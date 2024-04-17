@@ -142,6 +142,16 @@ def accept_req_book(req_id):
     db.session.commit()
     return make_response(jsonify({"user_id": req.user_id, "book_id":req.book_id, "Id":new_accept_req_book.id, "date_issued":formatted_time, "return_date":return_date}), 200)
 
+#My Books
+@main.route('/mybooks/<user_id>', methods=[GET])
+def mybooks(user_id):
+    reqs = Issue.query.filter_by(user_id = user_id)
+    output = []
+    for req in reqs:
+        book = Book.query.get_or_404(req.book_id)
+        this_req = {"issue id": req.id, "book_id": book.id, "name": book.name, "return": req.return_date, "issue": req.date_issued}
+        output.append(this_req)
+    return make_response(jsonify({"books": output}), 200)
 
 #Revoke access
 @main.route('/books/revoke/<issue_id>', methods=['POST'])
