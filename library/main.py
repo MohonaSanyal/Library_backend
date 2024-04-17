@@ -166,7 +166,21 @@ def get_all_books():
         for issue in issues:
             if issue.book_id == book.id:
                 users_list.append({"user":issue.user_id, "issue_id":issue.id})
-        book_mapping.append({"book_id":book.id, "users_list":users_list})
+        book_mapping.append({"book_id":book.id, "users_list":users_list, "name": book.name})
+    return make_response(jsonify({"books":book_mapping}))
+
+#Book to user mapping requests
+@main.route('/books/all/req', methods=['GET'])
+def get_all_books_req():
+    books = Book.query.all()
+    book_mapping = []
+    for book in books:
+        users_list = []
+        issues = IssueRequests.query.all()
+        for issue in issues:
+            if issue.book_id == book.id:
+                users_list.append({"user":issue.user_id, "issue_id":issue.id})
+        book_mapping.append({"book_id":book.id, "users_list":users_list, "name": book.name})
     return make_response(jsonify({"books":book_mapping}))
 
 #Search
