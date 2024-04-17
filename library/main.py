@@ -128,11 +128,8 @@ def give_feedback(book_id):
     return make_response(jsonify({"user_id":user, "book_id":book_id, "feedback":feedback}), 200)
 
 #Issue book
-@main.route('/books/req/accept/<book_id>', methods=['POST'])
-def accept_req_book(book_id):
-    req = request.json
-    user = req["user_id"]
-    req_id = req["req_id"]
+@main.route('/books/req/accept/<req_id>', methods=['POST'])
+def accept_req_book(req_id):
     req = IssueRequests.query.get_or_404(req_id)
     db.session.delete(req)
     db.session.commit()
@@ -140,10 +137,10 @@ def accept_req_book(book_id):
     datetime_string =time.strftime("%Y-%m-%d %H:%M:%S")
     formatted_time = datetime.strptime(datetime_string, "%Y-%m-%d %H:%M:%S")
     return_date = formatted_time + timedelta(days=7)
-    new_accept_req_book = Issue(user_id = user, book_id = book_id, date_issued = formatted_time, return_date = return_date)
+    new_accept_req_book = Issue(user_id = req.user_id, book_id = req.book_id, date_issued = formatted_time, return_date = return_date)
     db.session.add(new_accept_req_book)
     db.session.commit()
-    return make_response(jsonify({"user_id":user, "book_id":book_id, "Id":new_accept_req_book.id, "date_issued":formatted_time, "return_date":return_date}), 200)
+    return make_response(jsonify({"user_id": req.user_id, "book_id":req.book_id, "Id":new_accept_req_book.id, "date_issued":formatted_time, "return_date":return_date}), 200)
 
 
 #Revoke access
