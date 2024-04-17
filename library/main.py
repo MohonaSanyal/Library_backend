@@ -130,11 +130,8 @@ def give_feedback(book_id):
     return make_response(jsonify({"user_id":user, "book_id":book_id, "feedback":feedback}), 200)
 
 #Issue book
-@main.route('/books/req/accept/<book_id>', methods=['POST'])
-def accept_req_book(book_id):
-    req = request.json
-    user = req["user_id"]
-    req_id = req["req_id"]
+@main.route('/books/req/accept/<req_id>', methods=['POST'])
+def accept_req_book(req_id):
     req = IssueRequests.query.get_or_404(req_id)
     db.session.delete(req)
     db.session.commit()
@@ -142,11 +139,21 @@ def accept_req_book(book_id):
     datetime_string =time.strftime("%Y-%m-%d %H:%M:%S")
     formatted_time = datetime.strptime(datetime_string, "%Y-%m-%d %H:%M:%S")
     return_date = formatted_time + timedelta(days=7)
-    new_accept_req_book = Issue(user_id = user, book_id = book_id, date_issued = formatted_time, return_date = return_date)
+    new_accept_req_book = Issue(user_id = req.user_id, book_id = req.book_id, date_issued = formatted_time, return_date = return_date)
     db.session.add(new_accept_req_book)
     db.session.commit()
-    return make_response(jsonify({"user_id":user, "book_id":book_id, "Id":new_accept_req_book.id, "date_issued":formatted_time, "return_date":return_date}), 200)
+    return make_response(jsonify({"user_id": req.user_id, "book_id":req.book_id, "Id":new_accept_req_book.id, "date_issued":formatted_time, "return_date":return_date}), 200)
 
+#My Books
+@main.route('/mybooks/<user_id>', methods=['GET'])
+def mybooks(user_id):
+    reqs = Issue.query.filter_by(user_id = user_id)
+    output = []
+    for req in reqs:
+        book = Book.query.get_or_404(req.book_id)
+        this_req = {"issue id": req.id, "book_id": book.id, "name": book.name, "return": req.return_date, "issue": req.date_issued}
+        output.append(this_req)
+    return make_response(jsonify({"books": output}), 200)
 
 #Revoke access
 @main.route('/books/revoke/<issue_id>', methods=['POST'])
@@ -168,7 +175,21 @@ def get_all_books():
         for issue in issues:
             if issue.book_id == book.id:
                 users_list.append({"user":issue.user_id, "issue_id":issue.id})
-        book_mapping.append({"book_id":book.id, "users_list":users_list})
+        book_mapping.append({"book_id":book.id, "users_list":users_list, "name": book.name})
+    return make_response(jsonify({"books":book_mapping}))
+
+#Book to user mapping requests
+@main.route('/books/all/req', methods=['GET'])
+def get_all_books_req():
+    books = Book.query.all()
+    book_mapping = []
+    for book in books:
+        users_list = []
+        issues = IssueRequests.query.all()
+        for issue in issues:
+            if issue.book_id == book.id:
+                users_list.append({"user":issue.user_id, "issue_id":issue.id})
+        book_mapping.append({"book_id":book.id, "users_list":users_list, "name": book.name})
     return make_response(jsonify({"books":book_mapping}))
 
 #Search
