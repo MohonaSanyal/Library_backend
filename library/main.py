@@ -90,7 +90,7 @@ def get_section():
     response = {"sections": []}
     sections = Section.query.all()
     for section in sections:
-        this_section = {"items": [], "id": section.id, "name": section.name}
+        this_section = {"items": [], "id": section.id, "name": section.name, "desc": section.desc}
         items = Book.query.filter(Book.section_id == section.id)
         for item in items:
             this_item = {"id": item.id, "ebook_price": item.ebook_price, "name": item.name, "authors": item.authors, "content": item.content}
