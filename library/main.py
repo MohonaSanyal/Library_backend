@@ -143,7 +143,7 @@ def accept_req_book(req_id):
     return make_response(jsonify({"user_id": req.user_id, "book_id":req.book_id, "Id":new_accept_req_book.id, "date_issued":formatted_time, "return_date":return_date}), 200)
 
 #My Books
-@main.route('/mybooks/<user_id>', methods=[GET])
+@main.route('/mybooks/<user_id>', methods=['GET'])
 def mybooks(user_id):
     reqs = Issue.query.filter_by(user_id = user_id)
     output = []
